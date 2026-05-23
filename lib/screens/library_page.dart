@@ -274,7 +274,7 @@ class _LibraryPageState extends State<LibraryPage>
                                     );
                                   },
                                 ),
-                                SpeedDialChild(
+                                /*SpeedDialChild(
                                   child: const Icon(Icons.search),
                                   label: 'Search',
                                   onTap: () {
@@ -286,7 +286,7 @@ class _LibraryPageState extends State<LibraryPage>
                                       ),
                                     );
                                   },
-                                ),
+                                ),*/
                               ];
                             case 0:
                             default:
@@ -316,7 +316,7 @@ class _LibraryPageState extends State<LibraryPage>
                                     );
                                   },
                                 ),
-                                SpeedDialChild(
+                                /*SpeedDialChild(
                                   child: const Icon(Icons.search),
                                   label: 'Search',
                                   onTap: () {
@@ -328,7 +328,7 @@ class _LibraryPageState extends State<LibraryPage>
                                       ),
                                     );
                                   },
-                                ),
+                                ),*/
                               ];
                           }
                         }
