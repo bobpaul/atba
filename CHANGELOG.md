@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.11.0](https://github.com/93Pd9s8Jt/atba/compare/v0.10.1...v0.11.0) (2026-06-01)
+
+
+### Features
+
+* **android:** Improve downloading by setting priority to 0 ([43e1f8e](https://github.com/93Pd9s8Jt/atba/commit/43e1f8e72f8a73dc4243a44f351580538bbfb01d))
+
+
+### Bug Fixes
+
+* Resync debug and release AndroidManifest.xml ([43e1f8e](https://github.com/93Pd9s8Jt/atba/commit/43e1f8e72f8a73dc4243a44f351580538bbfb01d))
+
 ## [0.10.1](https://github.com/93Pd9s8Jt/atba/compare/v0.10.0...v0.10.1) (2026-05-23)
 
 
