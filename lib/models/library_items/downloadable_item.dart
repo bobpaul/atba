@@ -66,6 +66,7 @@ abstract class DownloadableItem extends LibraryItem {
         directoryUri: Uri.parse(folderPath),
         filename: "$name.zip",
         allowPause: true,
+        priority: 0, // highest priorty
       ),
     );
     return response;
@@ -94,6 +95,7 @@ abstract class DownloadableItem extends LibraryItem {
         directoryUri: Uri.parse(folderPath),
         filename: file.name.split('/').last,
         allowPause: true,
+        priority: 0, // highest pirority
       ),
     );
     return response;

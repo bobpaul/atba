@@ -2,6 +2,7 @@
     <application
         android:label="ATBA"
         android:name="${applicationName}"
+        android:banner="@drawable/banner"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -23,6 +24,7 @@
             />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <!-- See https://github.com/llfbandit/app_links/blob/master/doc/README_android.md
@@ -66,7 +68,20 @@
                 <data android:pathPattern=".*\\.torrent" />
                 <data android:pathPattern=".*\\.nzb" />
             </intent-filter>
+            <!-- Support text sharing (for links) -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+            </intent-filter>
         </activity>
+        <service
+            android:name="com.bbflight.background_downloader.UIDTJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:exported="true"
+            android:foregroundServiceType="dataSync" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
@@ -91,6 +106,7 @@
     </queries>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RUN_USER_INITIATED_JOBS" /> <!-- Used to run downloads with priority 0 -->
         <!--
       Media access permissions.
       Android 13 or higher.
@@ -98,4 +114,8 @@
       -->
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-feature android:name="android.software.leanback"
+        android:required="false" /> <!-- doesn't only run on android tv -->
+    <uses-feature android:name="android.hardware.touchscreen"
+        android:required="false" />
 </manifest>
