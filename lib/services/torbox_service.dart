@@ -349,12 +349,13 @@ class TorboxAPI {
     bool? zipLink,
     bool? returnTorrentFile,
     String? userIP,
+    bool? appendName,
   }) async {
     assert(
       fileId != null || zipLink != null,
       'Either fileId or zipLink must be provided',
     );
-    return _makeRequest(
+    TorboxAPIResponse response = await _makeRequest(
       'api/torrents/requestdl',
       method: 'get',
       returnType: returnTorrentFile == null
@@ -367,8 +368,22 @@ class TorboxAPI {
         'zip_link': zipLink,
         'torrent_file': returnTorrentFile,
         'user_ip': userIP,
+        'append_name': appendName,
       },
     );
+    if (response.data != null && (appendName ?? false)) {
+      Uri originalUri = Uri.parse(response.data);
+      Uri fixedUri = originalUri.replace(
+        queryParameters: originalUri.queryParameters,
+      );
+      return TorboxAPIResponse.fromJson({
+        'success': response.success,
+        'error': response.error,
+        'detail': response.detail,
+        'data': fixedUri.toString(),
+      });
+    }
+    return response;
   }
 
   Future<TorboxAPIResponse> getTorrentsList({

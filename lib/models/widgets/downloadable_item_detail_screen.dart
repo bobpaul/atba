@@ -400,7 +400,11 @@ class DownloadableItemDetailScreen extends StatelessWidget {
     DownloadableFile file,
   ) async {
     if (item is Torrent) {
-      return await apiService.getTorrentDownloadUrl(item.id, fileId: file.id);
+      return await apiService.getTorrentDownloadUrl(
+        item.id,
+        fileId: file.id,
+        appendName: true,
+      );
     } else if (item is WebDownload) {
       return await apiService.getWebDownloadUrl(item.id, fileId: file.id);
     } else if (item is Usenet) {
