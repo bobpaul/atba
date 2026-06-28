@@ -411,9 +411,17 @@ class DownloadableItemDetailScreen extends StatelessWidget {
         appendName: appendName,
       );
     } else if (item is WebDownload) {
-      return await apiService.getWebDownloadUrl(item.id, fileId: file.id);
+      return await apiService.getWebDownloadUrl(
+        item.id,
+        fileId: file.id,
+        appendName: appendName,
+      );
     } else if (item is Usenet) {
-      return await apiService.getUsenetDownloadUrl(item.id, fileId: file.id);
+      return await apiService.getUsenetDownloadUrl(
+        item.id,
+        fileId: file.id,
+        appendName: appendName,
+      );
     } else {
       throw Error();
     }
