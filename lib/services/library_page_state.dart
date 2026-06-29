@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:atba/models/library_items/library_item.dart';
 import 'package:atba/models/library_items/queued_torrent.dart';
 import 'package:memoized/memoized.dart';
@@ -80,6 +81,41 @@ class LibraryPageState extends ChangeNotifier {
     searchController.addListener(() {
       setSearchQuery(searchController.text);
     });
+
+    // Handle keyboard navigation (eg: AndroidTV d-pad)
+    searchControllerFocusNode.onKeyEvent = (FocusNode node, KeyEvent event) {
+      // Only respond to physical button press down events
+      if (event is! KeyDownEvent) return KeyEventResult.ignored;
+
+      // Exit textbox on Up/Down Arrow keys
+      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        FocusScope.of(context).focusInDirection(TraversalDirection.up);
+        return KeyEventResult.handled;
+      }
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        FocusScope.of(context).focusInDirection(TraversalDirection.down);
+        return KeyEventResult.handled;
+      }
+
+      // Right Arrow key moves cursor, then exits text field
+      if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+        final String text = searchController.text;
+        final int cursorPosition = searchController.selection.baseOffset;
+
+        if (cursorPosition >= text.length) {
+          bool moved = FocusScope.of(
+            context,
+          ).focusInDirection(TraversalDirection.right);
+          if (!moved) {
+            // move down if nothing to the right
+            FocusScope.of(context).focusInDirection(TraversalDirection.down);
+          }
+          return KeyEventResult.handled;
+        }
+      }
+
+      return KeyEventResult.ignored;
+    };
   }
 
   Future<void> _initializeFutures() async {
