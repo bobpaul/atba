@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:atba/services/stremio_service.dart';
 import 'package:atba/screens/details_page.dart';
+import 'package:atba/utils.dart';
 
 class WatchPage extends StatefulWidget {
   const WatchPage({super.key});
@@ -135,38 +136,11 @@ class _SearchBarState extends State<SearchBar> {
   void initState() {
     super.initState();
 
-    // Attach the Android TV D-pad interceptor logic
-    _focusNode.onKeyEvent = (FocusNode node, KeyEvent event) {
-      if (event is! KeyDownEvent) return KeyEventResult.ignored;
-
-      // Exit text box focus on Up/Down arrows
-      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        FocusScope.of(context).focusInDirection(TraversalDirection.up);
-        return KeyEventResult.handled;
-      }
-      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-        FocusScope.of(context).focusInDirection(TraversalDirection.down);
-        return KeyEventResult.handled;
-      }
-
-      // Right Arrow moves cursor, then exits text field
-      if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-        final String text = _controller.text;
-        final int cursorPosition = _controller.selection.baseOffset;
-
-        if (cursorPosition >= text.length) {
-          bool moved = FocusScope.of(
-            context,
-          ).focusInDirection(TraversalDirection.right);
-          if (!moved) {
-            FocusScope.of(context).focusInDirection(TraversalDirection.down);
-          }
-          return KeyEventResult.handled;
-        }
-      }
-
-      return KeyEventResult.ignored;
-    };
+    configureTVInputNavigation(
+      context: context,
+      focusNode: _focusNode,
+      controller: _controller,
+    );
   }
 
   @override

@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
 String readableTime(int seconds) {
   if (seconds <= 0) return "∞";
   final int days = seconds ~/ 86400;
@@ -39,4 +42,47 @@ String getReadableSize(int size) {
   } else {
     return '${(size / (1000 * 1000 * 1000)).toStringAsPrecision(3)} GB';
   }
+}
+
+// configure a FocusNode for keyboard navigation for text fields (eg: TV D-pad)
+void configureTVInputNavigation({
+  required BuildContext context,
+  required FocusNode focusNode,
+  required TextEditingController controller,
+}) {
+  focusNode.onKeyEvent = (FocusNode node, KeyEvent event) {
+    if (event is! KeyDownEvent) return KeyEventResult.ignored;
+
+    // Up/Down Arrow keys exit text box focus
+    if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+      bool moved = FocusScope.of(
+        context,
+      ).focusInDirection(TraversalDirection.up);
+      return KeyEventResult.handled;
+    }
+    if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+      bool moved = FocusScope.of(
+        context,
+      ).focusInDirection(TraversalDirection.down);
+      return KeyEventResult.handled;
+    }
+
+    // Right Arrow key moves cursor, then exits text field
+    if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
+      final String text = controller.text;
+      final int cursorPosition = controller.selection.baseOffset;
+
+      if (cursorPosition >= text.length) {
+        bool moved = FocusScope.of(
+          context,
+        ).focusInDirection(TraversalDirection.right);
+        if (!moved) {
+          FocusScope.of(context).focusInDirection(TraversalDirection.down);
+        }
+        return KeyEventResult.handled;
+      }
+    }
+
+    return KeyEventResult.ignored;
+  };
 }

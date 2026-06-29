@@ -20,6 +20,7 @@ import 'package:atba/services/torbox_service.dart';
 import 'package:atba/config/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:atba/utils.dart';
 
 class LibraryPageState extends ChangeNotifier {
   bool _isTorrentNamesCensored = false;
@@ -82,40 +83,15 @@ class LibraryPageState extends ChangeNotifier {
       setSearchQuery(searchController.text);
     });
 
-    // Handle keyboard navigation (eg: AndroidTV d-pad)
-    searchControllerFocusNode.onKeyEvent = (FocusNode node, KeyEvent event) {
-      // Only respond to physical button press down events
-      if (event is! KeyDownEvent) return KeyEventResult.ignored;
+    searchController.addListener(() {
+      setSearchQuery(searchController.text);
+    });
 
-      // Exit textbox on Up/Down Arrow keys
-      if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        FocusScope.of(context).focusInDirection(TraversalDirection.up);
-        return KeyEventResult.handled;
-      }
-      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
-        FocusScope.of(context).focusInDirection(TraversalDirection.down);
-        return KeyEventResult.handled;
-      }
-
-      // Right Arrow key moves cursor, then exits text field
-      if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
-        final String text = searchController.text;
-        final int cursorPosition = searchController.selection.baseOffset;
-
-        if (cursorPosition >= text.length) {
-          bool moved = FocusScope.of(
-            context,
-          ).focusInDirection(TraversalDirection.right);
-          if (!moved) {
-            // move down if nothing to the right
-            FocusScope.of(context).focusInDirection(TraversalDirection.down);
-          }
-          return KeyEventResult.handled;
-        }
-      }
-
-      return KeyEventResult.ignored;
-    };
+    configureTVInputNavigation(
+      context: context,
+      focusNode: searchControllerFocusNode,
+      controller: searchController,
+    );
   }
 
   Future<void> _initializeFutures() async {
